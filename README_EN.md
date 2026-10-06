@@ -119,11 +119,11 @@ Character, work, and artist names are supplied through the user dictionary. The 
 
 ## Syntax and line breaks
 
-The parser tracks escapes and the depth of round and square brackets, splitting only at top-level commas. It preserves `(long hair:1.2)`, `((long hair))`, `[long hair]`, escaped commas, and escaped brackets. Weighted expressions containing a single tag are matched by the inner tag.
+The parser tracks escapes and the depth of round and square brackets, splitting at commas and blank lines outside brackets. A blank line consists of two or more line breaks, optionally separated by spaces or tabs. It preserves `(long hair:1.2)`, `((long hair))`, `[long hair]`, escaped commas, and escaped brackets. Weighted expressions containing a single tag are matched by the inner tag. Pin lists use the same splitting rules.
 
 Groups containing several tags, such as `(red dress, white gloves:1.2)`, are kept intact as one `general` unit. `embedding:name` is also preserved as one `general` unit.
 
-For inputs that can be sorted safely, the node trims leading and trailing whitespace from each unit and joins units with `, `. Line breaks do not act as tag separators. Line breaks around units are removed, while those inside tags or groups are preserved. Use commas to separate tags if the input currently separates them only with line breaks.
+For inputs that can be sorted safely, the node trims leading and trailing whitespace from each unit and joins units with `, `. For example, separating `close-up`, a prose paragraph, and a style tag with blank lines inserts commas between those units. Single line breaks, blank lines inside brackets, and escaped line breaks are preserved within their units. The node does not infer tag boundaries from spaces alone.
 
 The following inputs are returned completely unchanged, with a short warning in the standard log. The full prompt is not logged.
 

@@ -14,6 +14,7 @@ CATEGORIES = (
 )
 LOGGER = logging.getLogger(__name__)
 WEIGHT = re.compile(r"[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?\Z")
+PARAGRAPH_BREAK = re.compile(r"(?:\r?\n[ \t]*){2,}")
 CONTROL = re.compile(r"(?<![\w])(?:BREAK|AND|ADDCOMM|ADDBASE|ADDCOL|ADDROW|REGION|MASK)(?![\w])")
 
 
@@ -44,7 +45,7 @@ def load_presets():
 
 
 def split_units(prompt):
-    """Split only at unescaped top-level commas; reject ambiguous syntax."""
+    """Split at top-level commas and blank lines; reject ambiguous syntax."""
     if not prompt.strip():
         return []
     stack = []
@@ -52,16 +53,33 @@ def split_units(prompt):
     start = 0
     escaped = False
     visible = []
+    paragraph_breaks = {match.start(): match.end() for match in PARAGRAPH_BREAK.finditer(prompt)}
+    skip_until = 0
+    after_paragraph = False
+    after_comma = False
     for index, char in enumerate(prompt):
+        if index < skip_until:
+            continue
         if escaped:
             visible.append(" ")
             escaped = False
+            if char == "\r" and prompt[index + 1:index + 2] == "\n":
+                skip_until = index + 2
             continue
         if char == "\\":
             escaped = True
             visible.append(" ")
             continue
         visible.append(char)
+        if not stack and index in paragraph_breaks:
+            unit = prompt[start:index].strip()
+            if unit:
+                units.append(unit)
+                after_paragraph = True
+                after_comma = False
+            skip_until = paragraph_breaks[index]
+            start = skip_until
+            continue
         if char in "{}<>|":
             raise UnsafeSyntax("動的・領域指定などの特殊構文")
         if char in "([":
@@ -87,18 +105,22 @@ def split_units(prompt):
                     raise UnsafeSyntax("未対応のコロン構文")
         elif char == "," and not stack:
             unit = prompt[start:index].strip()
-            if not unit:
+            if not unit and not (after_paragraph and units):
                 raise UnsafeSyntax("空の区切り単位")
-            units.append(unit)
+            if unit:
+                units.append(unit)
             start = index + 1
+            after_paragraph = False
+            after_comma = True
     if escaped or stack:
         raise UnsafeSyntax("括弧またはエスケープの終端不正")
     if CONTROL.search("".join(visible)) or "__" in "".join(visible):
         raise UnsafeSyntax("制御語またはワイルドカード構文")
     last = prompt[start:].strip()
-    if not last:
+    if not last and after_comma:
         raise UnsafeSyntax("空の区切り単位")
-    units.append(last)
+    if last:
+        units.append(last)
     return units
 
 

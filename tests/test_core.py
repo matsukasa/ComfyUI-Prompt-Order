@@ -177,6 +177,34 @@ class PromptOrderTests(unittest.TestCase):
     def test_enabled_separator_whitespace_and_internal_newlines(self):
         self.assertEqual(order_prompt(" long hair,\n 1girl, (blue\n eyes:1.2) "), "1girl, long hair, (blue\n eyes:1.2)")
 
+    def test_blank_lines_separate_paragraphs_without_missing_commas(self):
+        prompt = "masterpiece, close-up\n\nA quiet garden with white flowers. Soft light falls over the leaves.\n\nwatercolor \\(medium\\)"
+        self.assertEqual(order_prompt(prompt),
+            "close-up, A quiet garden with white flowers. Soft light falls over the leaves., watercolor \\(medium\\), masterpiece")
+
+    def test_paragraph_separators_preserve_groups_and_line_endings(self):
+        prompt = "masterpiece\r\n \t\r\n1girl, (red dress,\n\nwhite gloves:1.2)\n\nblue eyes"
+        self.assertEqual(order_prompt(prompt), "1girl, blue eyes, (red dress,\n\nwhite gloves:1.2), masterpiece")
+        self.assertEqual(split_units(prompt), ["masterpiece", "1girl", "(red dress,\n\nwhite gloves:1.2)", "blue eyes"])
+
+    def test_paragraph_boundaries_next_to_commas_and_outer_whitespace(self):
+        prompt = "\n\nlong hair,\n\n 1girl\n\n"
+        self.assertEqual(order_prompt(prompt), "1girl, long hair")
+        ordered = order_prompt("masterpiece\n\nunknown\n\n1girl")
+        self.assertEqual(ordered, "1girl, unknown, masterpiece")
+        self.assertEqual(order_prompt(ordered), ordered)
+        self.assertEqual(order_prompt("long hair\n\n, 1girl"), "1girl, long hair")
+        for malformed in ("long hair,\n\n", "long hair,\n\n, 1girl"):
+            with self.subTest(prompt=malformed), self.assertLogs(level="WARNING"):
+                self.assertEqual(order_prompt(malformed), malformed)
+
+    def test_escaped_paragraph_break_is_not_a_separator(self):
+        prompt = "unknown\\\n\ncontinued, 1girl"
+        self.assertEqual(order_prompt(prompt), "1girl, unknown\\\n\ncontinued")
+        prompt = "unknown\\\r\n\r\ncontinued, 1girl"
+        self.assertEqual(order_prompt(prompt), "1girl, unknown\\\r\n\r\ncontinued")
+        self.assertEqual(split_units("unknown\r\ncontinued, 1girl"), ["unknown\r\ncontinued", "1girl"])
+
     def test_idempotence_and_unit_multiplicity(self):
         prompt = r"(red dress, white gloves:1.2), long_hair, 1girl, unknown, 1girl, tag\,comma, ((blue eyes))"
         kwargs = {"pin_front": "unknown", "pin_back": "long hair"}
