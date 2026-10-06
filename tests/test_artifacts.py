@@ -1,4 +1,4 @@
-"""Package registration, shipped data and example workflow checks."""
+"""Package registration and shipped data checks."""
 
 import importlib.util
 import json
@@ -40,39 +40,6 @@ class ArtifactTests(unittest.TestCase):
                 self.assertNotIn(key, seen)
                 seen.add(key)
                 self.assertEqual(order_prompt("unknown, " + tag, category_order=category), tag + ", unknown")
-
-    def test_example_links_and_widget_roundtrip(self):
-        source = json.loads((ROOT / "examples/prompt_order_workflow.json").read_text(encoding="utf-8"))
-        workflow = json.loads(json.dumps(source))
-        nodes = {node["id"]: node for node in workflow["nodes"]}
-        order_nodes = [node for node in nodes.values() if node["type"] == "ComfyUIPromptOrder"]
-        self.assertEqual(len(order_nodes), 1)
-        node = order_nodes[0]
-        names = [name for name, definition in PromptOrderNode.INPUT_TYPES()["required"].items()
-                 if not definition[1].get("forceInput")]
-        self.assertEqual(len(node["widgets_values"]), len(names))
-        values = dict(zip(names, node["widgets_values"]))
-        prompt_connection = next(link for link in workflow["links"]
-                                 if link[3] == node["id"] and link[-1] == "STRING")
-        upstream = nodes[prompt_connection[1]]
-        self.assertEqual(upstream["type"], "PrimitiveStringMultiline")
-        values["prompt"] = upstream["widgets_values"][0]
-        self.assertEqual(PromptOrderNode().sort_prompt(**values), (
-            "1girl, solo, long_hair, smile, outdoors, masterpiece",
-        ))
-        for link_id, origin, origin_slot, target, target_slot, data_type in workflow["links"]:
-            output = nodes[origin]["outputs"][origin_slot]
-            connection = nodes[target]["inputs"][target_slot]
-            self.assertEqual(output["type"], data_type)
-            self.assertEqual(connection["type"], data_type)
-            self.assertIn(link_id, output["links"])
-            self.assertEqual(connection["link"], link_id)
-        string_links = [link for link in workflow["links"] if link[-1] == "STRING"]
-        self.assertEqual(len(string_links), 2)
-        link = next(link for link in string_links if link[1] == node["id"])
-        self.assertEqual(nodes[link[1]]["type"], "ComfyUIPromptOrder")
-        self.assertEqual(nodes[link[3]]["type"], "CLIPTextEncode")
-        self.assertEqual(nodes[link[3]]["inputs"][link[4]]["name"], "text")
 
     def test_literal_numeric_colon_is_not_a_weight(self):
         prompt = r"(foo\:1.2), 1girl"

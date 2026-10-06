@@ -1,0 +1,16 @@
+[project]
+name = "prompt-order"
+version = "1.0.0"
+description = "Stable prompt tag ordering for ComfyUI with model presets, pinned tags, and user dictionaries."
+readme = "README_EN.md"
+requires-python = ">=3.10"
+dependencies = []
+classifiers = ["Operating System :: OS Independent"]
+
+[project.urls]
+Repository = "https://github.com/matsukasa/ComfyUI-Prompt-Order"
+Documentation = "https://github.com/matsukasa/ComfyUI-Prompt-Order/blob/main/README_EN.md"
+
+[tool.comfy]
+PublisherId = "matsukasa"
+DisplayName = "ComfyUI Prompt Order"

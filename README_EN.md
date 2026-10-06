@@ -14,12 +14,12 @@ Add `Prompt Order` from the node list. When the ComfyUI interface language is Ja
 
 Connect the STRING output of the preceding prompt node to `prompt`, then connect `ordered_prompt` to the `text` input of CLIP Text Encode. The `prompt` input accepts connections only. Edit the prompt in the preceding node.
 
+Only `prompt` has an input socket. Edit the preset, category order, and other settings in the node's widgets.
+
 ```text
 Input: masterpiece, long_hair, smile, 1girl, solo
 Output: 1girl, solo, long_hair, smile, masterpiece
 ```
-
-Load the [example workflow](examples/prompt_order_workflow.json) in ComfyUI. The standard Text (Multiline) node supplies the prompt, and Prompt Order sends the result to CLIP Text Encode. Select a local checkpoint in Load Checkpoint. Connect the node to your generation workflow to generate images.
 
 For workflows saved with the previous direct-input format, move the prompt to a preceding node, add a new Prompt Order node, and connect the STRING output. Transfer the preset, category order, pin settings, dictionary, and enabled setting as well.
 

@@ -16,10 +16,13 @@ class PromptOrderNodeTests(unittest.TestCase):
         self.assertTrue(inputs["prompt"][1].get("forceInput"))
         self.assertNotIn("multiline", inputs["prompt"][1])
         self.assertNotIn("default", inputs["prompt"][1])
+        self.assertFalse(inputs["prompt"][1].get("socketless", False))
         self.assertEqual(list(inputs["preset"][0]), ["Illustrious", "Animagine XL 4.0", "Custom"])
         for name, definition in inputs.items():
             with self.subTest(name=name):
                 self.assertTrue(definition[1].get("tooltip"))
+                if name != "prompt":
+                    self.assertTrue(definition[1].get("socketless"))
 
     def test_connected_string_processing(self):
         node = PromptOrderNode()

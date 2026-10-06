@@ -14,12 +14,12 @@
 
 前段のプロンプトノードのSTRING出力を`prompt`へ接続し、`ordered_prompt`をCLIP Text Encodeの`text`入力へ接続します。`prompt`は接続専用です。プロンプトは前段ノードで編集してください。
 
+入力ソケットは`prompt`だけです。プリセットやカテゴリ順などの設定は、ノード内の設定欄で編集します。
+
 ```text
 入力: masterpiece, long_hair, smile, 1girl, solo
 出力: 1girl, solo, long_hair, smile, masterpiece
 ```
-
-[サンプルワークフロー](examples/prompt_order_workflow.json)では、標準のText (Multiline)からプロンプトを受け取り、CLIP Text Encodeへ出力します。Load Checkpointで手元のチェックポイントを選んでください。画像生成には、利用中の生成ワークフローへ接続します。
 
 以前の直接入力形式で保存したワークフローを使う場合は、プロンプトを前段ノードへ移し、このノードを追加し直してSTRING出力を接続してください。プリセット・カテゴリ順・固定・辞書などの設定も移してください。
 
