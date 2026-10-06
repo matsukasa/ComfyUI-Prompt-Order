@@ -4,8 +4,10 @@ import argparse
 import asyncio
 import faulthandler
 import importlib.metadata
+import os
 from pathlib import Path
 import sys
+from unittest.mock import patch
 
 
 def main():
@@ -32,7 +34,25 @@ def main():
     assert node_class.RETURN_TYPES == ("STRING",)
     encode_text = comfy_nodes.CLIPTextEncode.INPUT_TYPES()["required"]["text"][0]
     assert encode_text == "STRING"
+    from app.custom_node_manager import CustomNodeManager
+    import app.custom_node_manager as manager_module
+
+    # Discover only this package, without changing the live installation paths.
+    original_glob = manager_module.glob.glob
+    root_pattern = os.path.join(str(package_root.parent), "*/")
+
+    def package_glob(pattern):
+        return [str(package_root) + os.sep] if pattern == root_pattern else original_glob(pattern)
+
+    with patch.object(manager_module.folder_paths, "get_folder_paths", return_value=[str(package_root.parent)]), \
+            patch.object(manager_module.glob, "glob", side_effect=package_glob):
+        manager = CustomNodeManager()
+        translations = manager.build_translations()
+    assert translations["en"]["nodeDefs"]["ComfyUIPromptOrder"]["display_name"] == "Prompt Order"
+    assert translations["ja"]["nodeDefs"]["ComfyUIPromptOrder"]["inputs"]["prompt"]["name"]
+    assert set(translations) == {"en", "ja"}
     print("PASS: actual ComfyUI loader, node execution, CLIP Text Encode STRING contract")
+    print("PASS: actual ComfyUI locale discovery for English and Japanese")
     print("ComfyUI:", comfyui_version.__version__)
     print("Frontend:", importlib.metadata.version("comfyui-frontend-package"))
 

@@ -1,0 +1,22 @@
+{
+  "ComfyUIPromptOrder": {
+    "display_name": "プロンプト順序整理",
+    "description": "既存タグを辞書とカテゴリ順で整理します。タグの表記・重み・重複を保持します。",
+    "inputs": {
+      "prompt": {"name": "プロンプト", "tooltip": "整理するタグ列。STRING接続にも対応します。"},
+      "preset": {
+        "name": "プリセット",
+        "tooltip": "空のcategory_orderに適用する整理順。カスタムの基準はIllustriousです。",
+        "options": {"Illustrious": "Illustrious", "Animagine XL 4.0": "Animagine XL 4.0", "Custom": "カスタム"}
+      },
+      "category_order": {"name": "カテゴリ順", "tooltip": "空欄はプリセット順。カンマ区切りで順を指定すると、省略カテゴリをプリセット順で末尾に補います。"},
+      "pin_front": {"name": "先頭に固定", "tooltip": "既存タグを指定順で先頭に固定。カンマ区切りで入力します。"},
+      "pin_back": {"name": "末尾に固定", "tooltip": "既存タグを指定順で末尾に固定。先頭との重複指定はエラーです。"},
+      "user_dictionary": {"name": "ユーザー辞書", "tooltip": "version=1とtagsのJSON。組み込み分類より優先します。空欄・{}も有効です。"},
+      "enabled": {"name": "有効", "tooltip": "無効にすると空白・改行を含めて入力をそのまま返します。"}
+    },
+    "outputs": {
+      "0": {"name": "整理済みプロンプト", "tooltip": "並べ替えたプロンプト。無効設定または未対応構文の場合は元の入力です。"}
+    }
+  }
+}

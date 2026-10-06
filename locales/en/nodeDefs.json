@@ -1,0 +1,22 @@
+{
+  "ComfyUIPromptOrder": {
+    "display_name": "Prompt Order",
+    "description": "Arrange existing tags using dictionaries and category order. Preserve spelling, weights, and duplicates.",
+    "inputs": {
+      "prompt": {"name": "Prompt", "tooltip": "Prompt tags to arrange. Accepts a connected STRING as well as direct input."},
+      "preset": {
+        "name": "Preset",
+        "tooltip": "Order used when category_order is empty. Custom uses Illustrious as its base.",
+        "options": {"Illustrious": "Illustrious", "Animagine XL 4.0": "Animagine XL 4.0", "Custom": "Custom"}
+      },
+      "category_order": {"name": "Category order", "tooltip": "Leave empty for the preset order. Enter comma-separated categories; omitted categories follow in preset order."},
+      "pin_front": {"name": "Pin to front", "tooltip": "Move existing tags to the front in the specified order. Separate entries with commas."},
+      "pin_back": {"name": "Pin to back", "tooltip": "Move existing tags to the back in the specified order. A tag pinned at both ends is an error."},
+      "user_dictionary": {"name": "User dictionary", "tooltip": "JSON with version=1 and tags. Overrides built-in classifications. Empty input and {} are valid."},
+      "enabled": {"name": "Enabled", "tooltip": "When disabled, return the input unchanged, including whitespace and line breaks."}
+    },
+    "outputs": {
+      "0": {"name": "Ordered prompt", "tooltip": "The prompt after ordering, or the unchanged input when ordering is disabled or the syntax is unsupported."}
+    }
+  }
+}

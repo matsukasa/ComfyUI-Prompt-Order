@@ -1,12 +1,14 @@
 # ComfyUI-Prompt-Order
 
+日本語 | [English](README_EN.md)
+
 既存のプロンプトをタグごとに分類し、選択した順番へ並べ替える独立したComfyUIカスタムノードです。先頭・末尾への固定と、ユーザー辞書による分類の追加・上書きに対応します。CPUで文字列だけを処理し、Python標準ライブラリを使用します。
 
 ## インストール
 
 このフォルダをComfyUIの`custom_nodes/ComfyUI-Prompt-Order`に配置し、ComfyUIを再起動してください。Python 3.10以上を使用します。追加ライブラリやモデルの導入は不要です。
 
-ノード一覧から`Prompt Order / プロンプト順序整理`を追加します。カテゴリは`prompt/ordering`、登録名は`ComfyUIPromptOrder`です。
+ノード一覧から`プロンプト順序整理`を追加します。カテゴリは`prompt/ordering`、登録名は`ComfyUIPromptOrder`です。ComfyUIの言語設定が日本語ならノード名・入力名・出力名・説明を日本語で表示し、その他の言語では英語で表示します。英語のノード名は`Prompt Order`です。内部の入力名、プリセット値、カテゴリ名は表示言語によらず共通です。
 
 ## 基本的な使い方
 
@@ -66,7 +68,7 @@ subject, character, copyright, artist_style, rating, appearance, clothing, pose_
 | `score` | スコア |
 | `temporal` | 年代 |
 
-Illustriousの順番は参考記事をもとにした整理ルールです。記事にない細分類や作品・作者カテゴリの配置は、このノードで定めています。公式資料が全カテゴリの厳密な順番を保証しているという意味ではありません。確認対象のモデルカードは`Illustrious-xl-early-release-v0`であり、派生・マージモデルすべてへの最適性は断定しません。
+Illustriousのカテゴリ順は、このノードの整理ルールです。公式の`Illustrious-xl-early-release-v0`モデルカードを参照していますが、全カテゴリの厳密な順番を公式推奨として扱いません。派生・マージモデルでは、使用するモデルに合わせて順番を調整してください。
 
 Animagine XL 4.0では、公式ガイドにある主体・キャラクター・作品・作者タグの前方配置と、品質タグの後方配置を反映しています。レーティングの位置や一般属性内の細かな順番は、ノードの整理ルールです。作者名と画風は同じカテゴリにまとめています。これらのカテゴリは整理用であり、学習時の全タグ順の再現を目的としません。
 
@@ -107,7 +109,7 @@ pin_back: blue eyes
 
 ## 分類できる範囲
 
-`data/tags.json`には主体、容姿、衣装、姿勢、構図、背景、画風、品質など303件の分類を収録しています。正規化後の完全一致で照合し、部分一致は使いません。`1girl`や`3boys`のような人数タグだけ、正の整数と`girl`、`boy`、`other`および末尾の`s`からなる限定規則で補います。
+`data/tags.json`には主体、容姿、衣装、姿勢、構図、背景、画風、品質などの分類を収録しています。正規化後の完全一致で照合し、部分一致は使いません。`1girl`や`3boys`のような人数タグだけ、正の整数と`girl`、`boy`、`other`および末尾の`s`からなる限定規則で補います。
 
 キャラクター名、作品名、作者名は初期辞書に収録していません。括弧や語形から推測せず、ユーザー辞書で明示します。収録していない属性や複合タグは`general`として保持します。同一カテゴリでは入力順を維持します。組み込み辞書は`data/tags.json`、整理順は`data/presets.json`で別々に管理します。
 
@@ -149,10 +151,10 @@ python -m unittest discover -s tests -v
 
 ブラウザでの確認は、インストール後にノードを追加し、直接入力とSTRING接続、CLIP Text Encodeとの接続、設定が異なる複数ノード、ワークフロー保存・再読込を順に確認してください。
 
-## 参考資料
+## 公式資料
 
-- [Illustrious / Animagine プロンプトガイド](https://note.com/kazumu/n/n6390a899bdce)。Illustriousの整理順の参考記事です。
 - [Animagine XL 4.0公式ガイドと更新情報](https://cagliostrolab.net/posts/optimizing-animagine-xl-40-in-depth-guideline-and-update)。4.0と4.0-Optの作者タグ・品質タグの配置を確認しています。
 - [Animagine XL 4.0モデルカード](https://huggingface.co/cagliostrolab/animagine-xl-4.0)。主体・キャラクター・作品と品質タグの推奨を確認しています。
-- [Illustrious XL early release v0モデルカード](https://huggingface.co/OnomaAIResearch/Illustrious-xl-early-release-v0)。記事の全カテゴリ順や派生モデルへの適用を公式保証として扱わないための確認資料です。
+- [Illustrious XL early release v0モデルカード](https://huggingface.co/OnomaAIResearch/Illustrious-xl-early-release-v0)。品質タグやベースモデルの使い方を説明しています。
 - [ComfyUIカスタムノードの入力](https://docs.comfy.org/custom-nodes/backend/more_on_inputs)。標準入力とウィジェットを使用しています。
+- [ComfyUIカスタムノードの翻訳仕様](https://docs.comfy.org/custom-nodes/i18n)。ノードの表示言語に使用しています。
