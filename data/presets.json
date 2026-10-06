@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "presets": {
+    "Illustrious": ["subject", "character", "copyright", "rating", "artist_style", "appearance", "clothing", "pose_expression", "composition", "background_lighting", "general", "quality", "score", "temporal"],
+    "Animagine XL 4.0": ["subject", "character", "copyright", "artist_style", "rating", "appearance", "clothing", "pose_expression", "composition", "background_lighting", "general", "quality", "score", "temporal"],
+    "Custom": ["subject", "character", "copyright", "rating", "artist_style", "appearance", "clothing", "pose_expression", "composition", "background_lighting", "general", "quality", "score", "temporal"]
+  }
+}

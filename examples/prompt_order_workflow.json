@@ -1,0 +1,57 @@
+{
+  "last_node_id": 3,
+  "last_link_id": 2,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "CheckpointLoaderSimple",
+      "pos": [40, 60],
+      "size": [320, 110],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {"name": "MODEL", "type": "MODEL", "links": null, "slot_index": 0},
+        {"name": "CLIP", "type": "CLIP", "links": [1], "slot_index": 1},
+        {"name": "VAE", "type": "VAE", "links": null, "slot_index": 2}
+      ],
+      "properties": {"Node name for S&R": "CheckpointLoaderSimple"},
+      "widgets_values": ["SELECT_YOUR_CHECKPOINT.safetensors"]
+    },
+    {
+      "id": 2,
+      "type": "ComfyUIPromptOrder",
+      "pos": [40, 230],
+      "size": [600, 660],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [{"name": "ordered_prompt", "type": "STRING", "links": [2], "slot_index": 0}],
+      "properties": {"Node name for S&R": "ComfyUIPromptOrder"},
+      "widgets_values": ["masterpiece, long_hair, smile, outdoors, 1girl, solo", "Animagine XL 4.0", "", "", "", "{}", true]
+    },
+    {
+      "id": 3,
+      "type": "CLIPTextEncode",
+      "pos": [740, 230],
+      "size": [480, 240],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {"name": "clip", "type": "CLIP", "link": 1},
+        {"name": "text", "type": "STRING", "link": 2, "widget": {"name": "text"}}
+      ],
+      "outputs": [{"name": "CONDITIONING", "type": "CONDITIONING", "links": null, "slot_index": 0}],
+      "properties": {"Node name for S&R": "CLIPTextEncode"},
+      "widgets_values": [""]
+    }
+  ],
+  "links": [[1, 1, 1, 3, 0, "CLIP"], [2, 2, 0, 3, 1, "STRING"]],
+  "groups": [],
+  "config": {},
+  "extra": {"ds": {"scale": 0.8, "offset": [30, 30]}},
+  "version": 0.4
+}
