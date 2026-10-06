@@ -13,15 +13,16 @@ class PromptOrderNodeTests(unittest.TestCase):
         inputs = PromptOrderNode.INPUT_TYPES()["required"]
         self.assertEqual(set(inputs), {"prompt", "preset", "category_order", "pin_front", "pin_back", "user_dictionary", "enabled"})
         self.assertEqual(inputs["prompt"][0], "STRING")
-        self.assertTrue(inputs["prompt"][1]["multiline"])
+        self.assertTrue(inputs["prompt"][1].get("forceInput"))
+        self.assertNotIn("multiline", inputs["prompt"][1])
+        self.assertNotIn("default", inputs["prompt"][1])
         self.assertEqual(list(inputs["preset"][0]), ["Illustrious", "Animagine XL 4.0", "Custom"])
         for name, definition in inputs.items():
             with self.subTest(name=name):
                 self.assertTrue(definition[1].get("tooltip"))
 
-    def test_direct_and_connected_string_share_processing(self):
+    def test_connected_string_processing(self):
         node = PromptOrderNode()
-        self.assertEqual(node.sort_prompt(prompt="long hair, 1girl"), ("1girl, long hair",))
         upstream_string = "long hair, 1girl"
         self.assertEqual(node.sort_prompt(prompt=upstream_string), ("1girl, long hair",))
 

@@ -48,9 +48,15 @@ class ArtifactTests(unittest.TestCase):
         order_nodes = [node for node in nodes.values() if node["type"] == "ComfyUIPromptOrder"]
         self.assertEqual(len(order_nodes), 1)
         node = order_nodes[0]
-        names = list(PromptOrderNode.INPUT_TYPES()["required"])
+        names = [name for name, definition in PromptOrderNode.INPUT_TYPES()["required"].items()
+                 if not definition[1].get("forceInput")]
         self.assertEqual(len(node["widgets_values"]), len(names))
         values = dict(zip(names, node["widgets_values"]))
+        prompt_connection = next(link for link in workflow["links"]
+                                 if link[3] == node["id"] and link[-1] == "STRING")
+        upstream = nodes[prompt_connection[1]]
+        self.assertEqual(upstream["type"], "PrimitiveStringMultiline")
+        values["prompt"] = upstream["widgets_values"][0]
         self.assertEqual(PromptOrderNode().sort_prompt(**values), (
             "1girl, solo, long_hair, smile, outdoors, masterpiece",
         ))
@@ -62,8 +68,8 @@ class ArtifactTests(unittest.TestCase):
             self.assertIn(link_id, output["links"])
             self.assertEqual(connection["link"], link_id)
         string_links = [link for link in workflow["links"] if link[-1] == "STRING"]
-        self.assertEqual(len(string_links), 1)
-        link = string_links[0]
+        self.assertEqual(len(string_links), 2)
+        link = next(link for link in string_links if link[1] == node["id"])
         self.assertEqual(nodes[link[1]]["type"], "ComfyUIPromptOrder")
         self.assertEqual(nodes[link[3]]["type"], "CLIPTextEncode")
         self.assertEqual(nodes[link[3]]["inputs"][link[4]]["name"], "text")

@@ -3,7 +3,7 @@
     "display_name": "プロンプト順序整理",
     "description": "既存タグを辞書とカテゴリ順で整理します。タグの表記・重み・重複を保持します。",
     "inputs": {
-      "prompt": {"name": "プロンプト", "tooltip": "整理するタグ列。STRING接続にも対応します。"},
+      "prompt": {"name": "プロンプト", "tooltip": "前段のプロンプトノードのSTRING出力を接続します。"},
       "preset": {
         "name": "プリセット",
         "tooltip": "空のcategory_orderに適用する整理順。カスタムの基準はIllustriousです。",

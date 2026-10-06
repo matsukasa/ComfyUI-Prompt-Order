@@ -13,7 +13,8 @@ class PromptOrderNode:
             return ("STRING", {"default": default, "multiline": True,
                                "dynamicPrompts": False, "tooltip": tooltip})
         return {"required": {
-            "prompt": text("", "Prompt tags to arrange. Accepts a connected STRING as well as direct input."),
+            "prompt": ("STRING", {"forceInput": True,
+                                  "tooltip": "Connect the STRING output of the preceding prompt node."}),
             "preset": (["Illustrious", "Animagine XL 4.0", "Custom"], {
                 "default": "Illustrious", "tooltip": "Order used when category_order is empty. Custom uses Illustrious as its base."}),
             "category_order": text("", "Leave empty for the preset order. Enter comma-separated categories; omitted categories follow in preset order."),

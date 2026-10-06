@@ -12,14 +12,16 @@ Add `Prompt Order` from the node list. When the ComfyUI interface language is Ja
 
 ## Basic usage
 
-Enter comma-separated tags in `prompt` and connect `ordered_prompt` to the `text` input of CLIP Text Encode. To receive a STRING connection, use the standard node action to convert the `prompt` widget to an input. Both input methods use the same Python processing.
+Connect the STRING output of the preceding prompt node to `prompt`, then connect `ordered_prompt` to the `text` input of CLIP Text Encode. The `prompt` input accepts connections only. Edit the prompt in the preceding node.
 
 ```text
 Input: masterpiece, long_hair, smile, 1girl, solo
 Output: 1girl, solo, long_hair, smile, masterpiece
 ```
 
-Load the [example workflow](examples/prompt_order_workflow.json) in ComfyUI to see the connection from this node to CLIP Text Encode. Select a local checkpoint in Load Checkpoint. The example demonstrates STRING and CLIP connections; connect the node to your generation workflow to generate images.
+Load the [example workflow](examples/prompt_order_workflow.json) in ComfyUI. The standard Text (Multiline) node supplies the prompt, and Prompt Order sends the result to CLIP Text Encode. Select a local checkpoint in Load Checkpoint. Connect the node to your generation workflow to generate images.
+
+For workflows saved with the previous direct-input format, move the prompt to a preceding node, add a new Prompt Order node, and connect the STRING output. Transfer the preset, category order, pin settings, dictionary, and enabled setting as well.
 
 ## Settings
 
@@ -27,7 +29,7 @@ The table uses the stable input identifiers. Displayed labels follow the ComfyUI
 
 | Setting | Meaning |
 | --- | --- |
-| `prompt` | Prompt received through a multiline widget or STRING connection |
+| `prompt` | Prompt received from the preceding node's STRING output |
 | `preset` | Ordering preset: `Illustrious`, `Animagine XL 4.0`, or `Custom` |
 | `category_order` | Comma-separated category order; leave blank to use the preset |
 | `pin_front` | Pin tags present in the input to the beginning, in the specified order |
@@ -133,7 +135,7 @@ The following inputs are returned completely unchanged, with a short warning in 
 
 The node handles ordinary tag lists. It does not fully parse every extension's custom syntax. Set `enabled=false` when support for a syntax is uncertain. The safety check and disabled-node passthrough happen before validation of other settings. For safe input, malformed pin syntax produces a configuration error.
 
-Dynamic prompt expansion is disabled on the standard `prompt` widget. Text expanded by a connected upstream node is processed as the received string.
+This node processes the string it receives. If an upstream node expands dynamic prompts, the expanded string is the input to this node.
 
 ## Tests
 
@@ -151,7 +153,7 @@ With an existing ComfyUI environment, you can run this optional check using that
 <ComfyUI Python> tests/check_comfyui.py --comfyui-root <ComfyUI folder>
 ```
 
-For browser verification after installation, add the node and check direct text input, STRING connections, the connection to CLIP Text Encode, multiple nodes with different settings, and workflow saving and reloading. Change the ComfyUI interface language to check Japanese and English labels.
+For browser verification after installation, add the node and check the STRING connection from the preceding node, the connection to CLIP Text Encode, multiple nodes with different settings, and workflow saving and reloading. Change the ComfyUI interface language to check Japanese and English labels.
 
 ## Official references
 

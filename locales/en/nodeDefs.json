@@ -3,7 +3,7 @@
     "display_name": "Prompt Order",
     "description": "Arrange existing tags using dictionaries and category order. Preserve spelling, weights, and duplicates.",
     "inputs": {
-      "prompt": {"name": "Prompt", "tooltip": "Prompt tags to arrange. Accepts a connected STRING as well as direct input."},
+      "prompt": {"name": "Prompt", "tooltip": "Connect the STRING output of the preceding prompt node."},
       "preset": {
         "name": "Preset",
         "tooltip": "Order used when category_order is empty. Custom uses Illustrious as its base.",

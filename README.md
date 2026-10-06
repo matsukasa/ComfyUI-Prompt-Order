@@ -12,20 +12,22 @@
 
 ## 基本的な使い方
 
-`prompt`にカンマ区切りのタグ列を入力し、`ordered_prompt`をCLIP Text Encodeの`text`入力へ接続します。STRINGを受け取る場合は、ノードの標準操作で`prompt`ウィジェットを入力へ変換して接続してください。入力方法によらず同じPython処理を使います。
+前段のプロンプトノードのSTRING出力を`prompt`へ接続し、`ordered_prompt`をCLIP Text Encodeの`text`入力へ接続します。`prompt`は接続専用です。プロンプトは前段ノードで編集してください。
 
 ```text
 入力: masterpiece, long_hair, smile, 1girl, solo
 出力: 1girl, solo, long_hair, smile, masterpiece
 ```
 
-[サンプルワークフロー](examples/prompt_order_workflow.json)をComfyUIに読み込むと、ノードからCLIP Text Encodeへの接続を確認できます。Load Checkpointで手元のチェックポイントを選んでください。これは文字列とCLIPの接続例です。画像生成には、利用中の生成ワークフローへ接続します。
+[サンプルワークフロー](examples/prompt_order_workflow.json)では、標準のText (Multiline)からプロンプトを受け取り、CLIP Text Encodeへ出力します。Load Checkpointで手元のチェックポイントを選んでください。画像生成には、利用中の生成ワークフローへ接続します。
+
+以前の直接入力形式で保存したワークフローを使う場合は、プロンプトを前段ノードへ移し、このノードを追加し直してSTRING出力を接続してください。プリセット・カテゴリ順・固定・辞書などの設定も移してください。
 
 ## 設定
 
 | 設定 | 意味 |
 | --- | --- |
-| `prompt` | 複数行入力またはSTRING接続で受け取るプロンプト |
+| `prompt` | 前段ノードのSTRING出力から受け取るプロンプト |
 | `preset` | `Illustrious`、`Animagine XL 4.0`、`Custom`の整理順 |
 | `category_order` | カテゴリ名をカンマ区切りで指定する順番。空欄ならプリセット順 |
 | `pin_front` | 入力中に存在するタグを、指定順に先頭へ固定 |
@@ -131,7 +133,7 @@ pin_back: blue eyes
 
 対象は一般的なタグ列です。拡張機能ごとの独自構文を完全に解析するものではありません。対応範囲が不明な構文には`enabled=false`を使用してください。安全性確認と無効設定による全文維持は、他の設定の検証より先に行います。安全な入力に対して固定設定の構文が不正な場合は、設定エラーになります。
 
-`prompt`の標準ウィジェットでは動的プロンプト展開を無効にしています。接続元が展開した文字列は、受け取った文字列として処理します。
+このノードは受け取った文字列を処理します。接続元で動的プロンプトを展開した場合は、展開後の文字列が処理対象です。
 
 ## テスト
 
@@ -149,7 +151,7 @@ python -m unittest discover -s tests -v
 <ComfyUIのPython> tests/check_comfyui.py --comfyui-root <ComfyUIフォルダ>
 ```
 
-ブラウザでの確認は、インストール後にノードを追加し、直接入力とSTRING接続、CLIP Text Encodeとの接続、設定が異なる複数ノード、ワークフロー保存・再読込を順に確認してください。
+ブラウザでの確認は、インストール後にノードを追加し、前段からのSTRING接続、CLIP Text Encodeとの接続、設定が異なる複数ノード、ワークフロー保存・再読込を順に確認してください。
 
 ## 公式資料
 

@@ -32,6 +32,7 @@ def main():
         "1girl, long hair, masterpiece",
     )
     assert node_class.RETURN_TYPES == ("STRING",)
+    assert node_class.INPUT_TYPES()["required"]["prompt"][1]["forceInput"] is True
     encode_text = comfy_nodes.CLIPTextEncode.INPUT_TYPES()["required"]["text"][0]
     assert encode_text == "STRING"
     from app.custom_node_manager import CustomNodeManager
