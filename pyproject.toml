@@ -1,6 +1,6 @@
 [project]
 name = "prompt-order"
-version = "1.0.0"
+version = "1.0.1"
 description = "Stable prompt tag ordering for ComfyUI with model presets, pinned tags, and user dictionaries."
 readme = "README_EN.md"
 requires-python = ">=3.10"
