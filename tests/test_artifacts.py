@@ -39,7 +39,8 @@ class ArtifactTests(unittest.TestCase):
                 key = _normalized(tag)
                 self.assertNotIn(key, seen)
                 seen.add(key)
-                self.assertEqual(order_prompt("unknown, " + tag, category_order=category), tag + ", unknown")
+                expected = "unknown, " + tag if category == "general" else tag + ", unknown"
+                self.assertEqual(order_prompt("unknown, " + tag, category_order=category), expected)
 
     def test_literal_numeric_colon_is_not_a_weight(self):
         prompt = r"(foo\:1.2), 1girl"

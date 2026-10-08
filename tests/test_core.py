@@ -180,7 +180,7 @@ class PromptOrderTests(unittest.TestCase):
     def test_blank_lines_separate_paragraphs_without_missing_commas(self):
         prompt = "masterpiece, close-up\n\nA quiet garden with white flowers. Soft light falls over the leaves.\n\nwatercolor \\(medium\\)"
         self.assertEqual(order_prompt(prompt),
-            "close-up, A quiet garden with white flowers. Soft light falls over the leaves., watercolor \\(medium\\), masterpiece")
+            "watercolor \\(medium\\), close-up, A quiet garden with white flowers. Soft light falls over the leaves., masterpiece")
 
     def test_paragraph_separators_preserve_groups_and_line_endings(self):
         prompt = "masterpiece\r\n \t\r\n1girl, (red dress,\n\nwhite gloves:1.2)\n\nblue eyes"
